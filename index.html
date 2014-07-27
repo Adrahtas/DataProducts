@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Predicting MLB playoff odds!</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Predicting MLB playoff odds!">
+  <meta name="author" content="Andreas Adrahtas, Coursera Data Science Student">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="libraries/widgets/quiz/css/demo.css"></link>
+<link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Predicting MLB playoff odds!</h1>
+    <h2></h2>
+    <p>Andreas Adrahtas, Coursera Data Science Student<br/></p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Predicting MLB Playoff Odds!</h2>
+  </hgroup>
+  <article data-timings="">
+    <ol>
+<li>For those who always want to assess whether their team is projected to make the playoffs or not!</li>
+<li>Just a naive, simple application.</li>
+<li>Does not make use of team name, division, players or any other statistics except wins and losses up to date</li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Naive Model Description</h2>
+  </hgroup>
+  <article data-timings="">
+    <ol>
+<li>User gives input of current wins and losses for their team.</li>
+<li>Model calculates the percentage of wins up to this point.</li>
+<li>Model takes the sum of wins and losses to determine the number of remaining games (162-wins-losses).</li>
+<li>Multiplying the remaining games with the win percentage and adding to current wins we get the expected wins for the season.</li>
+<li>Based on the number of expected wins, output gives empirical probability of making the playoffs.</li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>R Code in the prediction function</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">playoffodds &lt;- function(wins, losses){
+        games_left &lt;- 162 - (wins + losses)
+        win_pct &lt;- wins/(wins+losses)
+        projected_wins &lt;- wins + games_left*win_pct
+        if ( projected_wins &lt; 80) odds &lt;- 0.00
+        else if (projected_wins &lt; 83 &amp; projected_wins &gt; 79) odds &lt;- 0.10
+        else if (projected_wins &lt; 86 &amp; projected_wins &gt; 82) odds &lt;- 0.17
+        else if (projected_wins &lt; 89 &amp; projected_wins &gt; 85) odds &lt;- 0.22
+        else if (projected_wins &lt; 91 &amp; projected_wins &gt; 88) odds &lt;- 0.55
+        else if (projected_wins &lt; 93 &amp; projected_wins &gt; 90) odds &lt;- 0.83
+        else if (projected_wins &lt; 95 &amp; projected_wins &gt; 92) odds &lt;- 0.92
+        else odds &lt;- 1.00
+        odds
+}
+# If your team has 52 wins and 49 losses up to know this is the assessed probability by the model:
+playoffodds(52,49)
+</code></pre>
+
+<pre><code>## [1] 0.17
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Why use this app???</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Just for fun. </p>
+
+<p>But wouldn&#39;t it be nice to give a more realistic answer?</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Thoughts for improvement</h2>
+  </hgroup>
+  <article data-timings="">
+    <ol>
+<li><p>Incorporate team name, runs scored, runs scored against, strength of remaining schedule, weights on wins and losses, pitchers ERA or other stats to build a better predictor function (a continuous probability distribution function would make more sense than the naive model presented here)</p></li>
+<li><p>Aside from the predictor, it would be nice to assess the probability of the outcome between two specified teams. However this would take quite some input and it might be less user friendly!</p></li>
+<li><p>Thanks for watching, any ideas for improvements to the app are welcome.</p></li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Predicting MLB Playoff Odds!'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Naive Model Description'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='R Code in the prediction function'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Why use this app???'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Thoughts for improvement'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title=''>
+         6
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  <script src="libraries/widgets/quiz/js/jquery.quiz.js"></script>
+<script src="libraries/widgets/quiz/js/mustache.min.js"></script>
+<script src="libraries/widgets/quiz/js/quiz-app.js"></script>
+
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>

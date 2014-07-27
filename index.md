@@ -1,0 +1,79 @@
+---
+title       : Predicting MLB playoff odds!
+subtitle    : 
+author      : Andreas Adrahtas, Coursera Data Science Student
+job         : 
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : [mathjax,quiz]            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+---
+
+## Predicting MLB Playoff Odds!
+
+1. For those who always want to assess whether their team is projected to make the playoffs or not!
+2. Just a naive, simple application.
+3. Does not make use of team name, division, players or any other statistics except wins and losses up to date
+
+--- .class #id 
+
+## Naive Model Description
+
+1. User gives input of current wins and losses for their team.
+2. Model calculates the percentage of wins up to this point.
+3. Model takes the sum of wins and losses to determine the number of remaining games (162-wins-losses).
+4. Multiplying the remaining games with the win percentage and adding to current wins we get the expected wins for the season.
+5. Based on the number of expected wins, output gives empirical probability of making the playoffs.
+
+--- .class #id 
+
+## R Code in the prediction function
+
+
+```r
+playoffodds <- function(wins, losses){
+        games_left <- 162 - (wins + losses)
+        win_pct <- wins/(wins+losses)
+        projected_wins <- wins + games_left*win_pct
+        if ( projected_wins < 80) odds <- 0.00
+        else if (projected_wins < 83 & projected_wins > 79) odds <- 0.10
+        else if (projected_wins < 86 & projected_wins > 82) odds <- 0.17
+        else if (projected_wins < 89 & projected_wins > 85) odds <- 0.22
+        else if (projected_wins < 91 & projected_wins > 88) odds <- 0.55
+        else if (projected_wins < 93 & projected_wins > 90) odds <- 0.83
+        else if (projected_wins < 95 & projected_wins > 92) odds <- 0.92
+        else odds <- 1.00
+        odds
+}
+# If your team has 52 wins and 49 losses up to know this is the assessed probability by the model:
+playoffodds(52,49)
+```
+
+```
+## [1] 0.17
+```
+
+--- .class #id 
+
+## Why use this app???
+
+Just for fun. 
+
+But wouldn't it be nice to give a more realistic answer?
+
+--- .class #id 
+
+## Thoughts for improvement
+
+1. Incorporate team name, runs scored, runs scored against, strength of remaining schedule, weights on wins and losses, pitchers ERA or other stats to build a better predictor function (a continuous probability distribution function would make more sense than the naive model presented here)
+
+2. Aside from the predictor, it would be nice to assess the probability of the outcome between two specified teams. However this would take quite some input and it might be less user friendly!
+
+3. Thanks for watching, any ideas for improvements to the app are welcome.
+
+--- .class #id 
+
+
+
